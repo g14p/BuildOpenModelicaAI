@@ -54,7 +54,7 @@ stdenv.mkDerivation (finalAttrs: {
     # OMOptim and OMCompiler/Compiler/boot/bomc (OMBootstrapping).
     fetchSubmodules = true;
     # On the first build Nix prints the real hash -> paste it here.
-    hash = lib.fakeHash;
+    hash = "sha256-8P4d2W3FctQKmbKEmBIcLqISFYi54yIgXzbat5HKnYE=";
   };
 
   postPatch = ''
