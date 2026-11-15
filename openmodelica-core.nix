@@ -4,6 +4,7 @@
   lib,
   stdenv,
   fetchFromGitHub,
+  autoPatchelfHook,
   # build tools
   cmake,
   pkg-config,
@@ -79,6 +80,7 @@ stdenv.mkDerivation (finalAttrs: {
       flex
       bison
       jdk
+      autoPatchelfHook
     ]
     ++ lib.optional enableFortran gfortran
     ++ lib.optional enableGui qt6.wrapQtAppsHook;
@@ -112,7 +114,9 @@ stdenv.mkDerivation (finalAttrs: {
       libGL
       libGLU
     ];
-
+  shellHook = ''
+    export LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib:$LD_LIBRARY_PATH
+  '';
   cmakeFlags =
     [
       "-Wno-dev"
@@ -149,6 +153,9 @@ stdenv.mkDerivation (finalAttrs: {
     for pc in $(find $out/lib -name cminpack.pc 2>/dev/null); do
       sed -i -e "s|$out/||g" -e 's|//omc|/omc|g' -e 's|omc//|omc/|g' "$pc"
     done
+    # patchelfstuff 
+    # TODO the args for patchelf probably wrong yet. We need it to make execve work.
+    patchelf --shrink-rpath --allowed-rpath-prefixes "$NIX_STORE" $out/lib/omc/lib*.so*
   '';
 
   meta = {
