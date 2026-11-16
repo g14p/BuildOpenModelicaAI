@@ -110,13 +110,11 @@ stdenv.mkDerivation (finalAttrs: {
       qt6.qt5compat # Core5Compat, required by OMEdit with Qt6
       qt6.qtwebengine # replaces the insecure qtwebkit
       qt6.qthttpserver # optional for OMEdit (Qt >= 6.4)
+      qt6.qtwayland # claude said this is needed when on wayland
       openscenegraph
       libGL
       libGLU
     ];
-  shellHook = ''
-    export LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib:$LD_LIBRARY_PATH
-  '';
   cmakeFlags =
     [
       "-Wno-dev"
@@ -153,9 +151,6 @@ stdenv.mkDerivation (finalAttrs: {
     for pc in $(find $out/lib -name cminpack.pc 2>/dev/null); do
       sed -i -e "s|$out/||g" -e 's|//omc|/omc|g' -e 's|omc//|omc/|g' "$pc"
     done
-    # patchelfstuff 
-    # TODO the args for patchelf probably wrong yet. We need it to make execve work.
-    patchelf --shrink-rpath --allowed-rpath-prefixes "$NIX_STORE" $out/lib/omc/lib*.so*
   '';
 
   meta = {

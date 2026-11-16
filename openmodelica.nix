@@ -14,6 +14,7 @@
   unzip,
   which,
   coreutils,
+  gdb,
   xterm,
   blas,
   lapack,
@@ -43,6 +44,7 @@
     unzip # FMU export / import
     which
     coreutils
+    gdb
   ];
 in
   symlinkJoin {
